@@ -1,7 +1,7 @@
 import java.util.Arrays;
 
 public class Main {
-    private static final int M = 20; // разбиение по оси t
+    private static final int M = 5; // разбиение по оси t
     private static final int N = 100; // разбиение по оси x.
     private static final double HALF_ONE = 0.5;
     private static final double T = 1.0;
@@ -83,7 +83,7 @@ public class Main {
             x = 0;
             for (int i = 0; i < N - 1; i++) {
                 y_i[i] = prevY_i[i] + tau * (phi_2_i[i] + f_i[i]); //вычислили значения на первом слое
-                result_i[i] = resultFunction(x, tau);
+                result_i[i] = resultFunction(x, T);
 
                 x += h;
             }
@@ -105,6 +105,8 @@ public class Main {
             for (int i = 1; i < N - 1; i++) { // Прямой ход метода прогонки: вычисление f_i_jpp, alpha_i, beta_i.
                 f_i_jpp[i] = f(x, t + tau);
                 double denom = B - C * alpha_i[i - 1];
+                System.out.println(alpha_i[i]);
+                System.out.println();
                 alpha_i[i] = A / denom; //по формуле
                 beta_i[i] = (D_i[i - 1] + C * beta_i[i - 1]) / denom; //по формуле стр.19
                 x += h;
@@ -115,13 +117,6 @@ public class Main {
                 nextY_i[i] = alpha_i[i] * nextY_i[i + 1] + beta_i[i];
             }
             x = 0.;
-
-
-            //проверка
-            for (int i = 0; i < N; i++) { // Обновление коэффициентов D_i по y_i и y_(i-1).
-                result_i[i] = resultFunction(x, T);
-                x += h;
-            }
 
             //копируем массивы
             prevY_i = Arrays.copyOf(y_i, y_i.length);
